@@ -15,6 +15,7 @@ import {
   fetchRecentFromFolder,
   getTelegramClient,
   sendTelegramMessage,
+  setChannelTitle,
   unarchiveChats,
 } from "./telegram-client.js";
 
@@ -56,6 +57,29 @@ server.registerTool(
   async ({ title, description }) => {
     const client = await telegramClientPromise;
     const channel = await createBroadcastChannel(client, { title, description });
+
+    return {
+      content: [{ type: "text", text: JSON.stringify(channel, null, 2) }],
+    };
+  },
+);
+
+server.registerTool(
+  "tg_set_channel_title",
+  {
+    description:
+      "Rename a Telegram channel or group. Requires admin rights with permission to change chat info.",
+    inputSchema: {
+      channelId: z
+        .string()
+        .min(1)
+        .describe("Numeric ID or @username of the channel or group"),
+      title: z.string().min(1).max(255).describe("New title"),
+    },
+  },
+  async ({ channelId, title }) => {
+    const client = await telegramClientPromise;
+    const channel = await setChannelTitle(client, channelId, title);
 
     return {
       content: [{ type: "text", text: JSON.stringify(channel, null, 2) }],

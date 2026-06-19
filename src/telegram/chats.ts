@@ -30,6 +30,29 @@ export async function createBroadcastChannel(
   return info;
 }
 
+export async function setChannelTitle(
+  telegramClient: TelegramClient,
+  channelId: string,
+  title: string,
+): Promise<ChannelInfo> {
+  const peerRef = normalizeChannelRef(channelId);
+  await telegramClient.setChatTitle(peerRef, title);
+
+  const channel = await telegramClient.getPeer(peerRef);
+  const info: ChannelInfo = {
+    id: getPeerId(channel),
+    name: getPeerName(channel),
+  };
+
+  const username = getPeerUsername(channel);
+  if (username) {
+    info.username = username;
+    info.url = `https://t.me/${username}`;
+  }
+
+  return info;
+}
+
 export async function archiveChats(
   telegramClient: TelegramClient,
   channelIds: string[],

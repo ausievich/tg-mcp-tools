@@ -1,4 +1,4 @@
-export { archiveChats, createBroadcastChannel, unarchiveChats } from "./chats.js";
+export { archiveChats, createBroadcastChannel, setChannelTitle, unarchiveChats } from "./chats.js";
 export { getTelegramClient } from "./client.js";
 export { createTelegramFolder, editTelegramFolder, fetchFolders } from "./folders.js";
 export { fetchDialogs } from "./dialogs.js";
