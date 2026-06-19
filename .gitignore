@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.env
+*.log
+.idea/
+scripts
+.cursor/skills
+docs/
