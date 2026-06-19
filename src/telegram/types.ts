@@ -53,3 +53,9 @@ export interface CreateFolderParams {
   includeAll?: FolderInfo["includeAll"];
   exclude?: FolderInfo["exclude"];
 }
+
+export interface EditFolderParams {
+  name?: string;
+  includeChannels?: string[];
+  emoticon?: string;
+}

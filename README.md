@@ -19,7 +19,7 @@ npx tg-mcp-tools        # MCP server (stdio)
 
 ## Features
 
-- **10 MCP tools:** folders, dialogs, messages, digests, send message, archive/unarchive
+- **11 MCP tools:** folders (create/edit), dialogs, messages, digests, send message, archive/unarchive
 - **Post links** — every message includes a `url` field (`https://t.me/...`)
 - **Archived channels** — included when listing subscriptions
 - **QR login** — scan from the terminal, no SMS or in-app codes
@@ -98,6 +98,7 @@ After changing the config, reload Cursor (**Developer: Reload Window**).
 |------|---------|
 | `telegram_get_folders` | Telegram chat folders (tabs) with id and name |
 | `telegram_create_folder` | Create a folder with channels and filter rules |
+| `telegram_edit_folder` | Update an existing folder: replace included chats or rename it |
 | `telegram_get_dialogs` | List channels, groups, and chats; optional `folder` filter |
 | `telegram_get_messages` | Posts from one channel (@username or numeric id) |
 | `telegram_get_recent_from_channels` | Digest from multiple channels, sorted by date |

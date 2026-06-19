@@ -6,6 +6,7 @@ import { loadConfig } from "./config.js";
 import {
   archiveChats,
   createTelegramFolder,
+  editTelegramFolder,
   fetchDialogs,
   fetchFolders,
   fetchMessages,
@@ -177,6 +178,41 @@ server.registerTool(
 
     return {
       content: [{ type: "text", text: JSON.stringify(folder, null, 2) }],
+    };
+  },
+);
+
+server.registerTool(
+  "telegram_edit_folder",
+  {
+    description:
+      "Updates an existing Telegram chat folder: replace included channels or rename it.",
+    inputSchema: {
+      folder: folderSchema,
+      name: z
+        .string()
+        .min(1)
+        .max(12)
+        .optional()
+        .describe("New folder name (max 12 UTF-8 characters)"),
+      includeChannels: z
+        .array(z.string().min(1))
+        .max(100)
+        .optional()
+        .describe("Channels/groups to include (@username or numeric id); replaces current list"),
+      emoticon: z.string().optional().describe("Folder icon emoji"),
+    },
+  },
+  async ({ folder, name, includeChannels, emoticon }) => {
+    const client = await telegramClientPromise;
+    const updated = await editTelegramFolder(client, folder, {
+      name,
+      includeChannels,
+      emoticon,
+    });
+
+    return {
+      content: [{ type: "text", text: JSON.stringify(updated, null, 2) }],
     };
   },
 );

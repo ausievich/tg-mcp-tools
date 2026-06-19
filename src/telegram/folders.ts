@@ -1,6 +1,6 @@
 import { TelegramClient, type tl } from "@mtcute/node";
-import { resolveInputPeers } from "./peers.js";
-import type { CreateFolderParams, FolderInfo } from "./types.js";
+import { normalizeFolderRef, resolveInputPeers } from "./peers.js";
+import type { CreateFolderParams, EditFolderParams, FolderInfo, FolderRef } from "./types.js";
 
 function mapDialogFilter(filter: tl.TypeDialogFilter): FolderInfo | null {
   if (filter._ === "dialogFilterDefault") {
@@ -159,6 +159,52 @@ export async function createTelegramFolder(
   const mapped = mapDialogFilter(created);
   if (!mapped) {
     throw new Error("Failed to map created folder");
+  }
+
+  return mapped;
+}
+
+export async function editTelegramFolder(
+  telegramClient: TelegramClient,
+  folder: FolderRef,
+  params: EditFolderParams,
+): Promise<FolderInfo> {
+  const folderRef = normalizeFolderRef(folder);
+  const { filters } = await telegramClient.getFolders();
+  const found = filters.find(
+    (it) =>
+      it._ === "dialogFilter" &&
+      (it.id === folderRef || it.title.text === folderRef),
+  );
+
+  if (!found || found._ !== "dialogFilter") {
+    throw new Error(`Folder not found: ${folder}`);
+  }
+
+  const modification: Partial<Omit<tl.RawDialogFilter, "id" | "_" | "title">> & {
+    title?: tl.RawTextWithEntities;
+  } = {};
+
+  if (params.name !== undefined) {
+    modification.title = { _: "textWithEntities", text: params.name, entities: [] };
+  }
+  if (params.emoticon !== undefined) {
+    modification.emoticon = params.emoticon;
+  }
+  if (params.includeChannels !== undefined) {
+    modification.includePeers = await resolveInputPeers(
+      telegramClient,
+      params.includeChannels,
+    );
+  }
+
+  const updated = await telegramClient.editFolder({
+    folder: found.id,
+    modification,
+  });
+  const mapped = mapDialogFilter(updated);
+  if (!mapped) {
+    throw new Error("Failed to map updated folder");
   }
 
   return mapped;

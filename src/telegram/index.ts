@@ -1,6 +1,6 @@
 export { archiveChats, unarchiveChats } from "./chats.js";
 export { getTelegramClient } from "./client.js";
-export { createTelegramFolder, fetchFolders } from "./folders.js";
+export { createTelegramFolder, editTelegramFolder, fetchFolders } from "./folders.js";
 export { fetchDialogs } from "./dialogs.js";
 export {
   fetchMessages,
@@ -19,6 +19,7 @@ export {
 export { buildTelegramPostUrl } from "./urls.js";
 export type {
   CreateFolderParams,
+  EditFolderParams,
   DialogInfo,
   DialogType,
   FolderInfo,

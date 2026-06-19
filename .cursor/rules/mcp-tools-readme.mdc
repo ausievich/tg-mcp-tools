@@ -1,0 +1,15 @@
+---
+description: Keep README in sync when MCP tools change
+globs: src/index.ts
+alwaysApply: false
+---
+
+# MCP tools → README
+
+When you add, remove, or rename an MCP tool (`server.registerTool` in `src/index.ts`), update `README.md` in the same change:
+
+1. **Features** — bump the MCP tool count and adjust the summary line if needed.
+2. **MCP tools table** — add, remove, or rename the row; keep the table sorted logically (folders → dialogs → messages → digests → send → archive).
+3. **Examples** — add a prompt example only if the new tool is user-facing and non-obvious.
+
+Do not ship a new tool without README updates. If you rename a tool, search the repo for the old name.
