@@ -5,6 +5,7 @@ import { z } from "zod";
 import { loadConfig } from "./config.js";
 import {
   archiveChats,
+  createBroadcastChannel,
   createTelegramFolder,
   editTelegramFolder,
   fetchDialogs,
@@ -25,7 +26,7 @@ const channelIdsSchema = z
 
 const folderSchema = z
   .union([z.string().min(1), z.number().int()])
-  .describe("Folder id (e.g. 2) or folder name (e.g. Travel). Use telegram_get_folders to list.");
+  .describe("Folder id (e.g. 2) or folder name (e.g. Travel). Use tg_get_folders to list.");
 
 const config = loadConfig();
 const telegramClientPromise = getTelegramClient(
@@ -40,7 +41,30 @@ const server = new McpServer({
 });
 
 server.registerTool(
-  "telegram_archive_chats",
+  "tg_create_channel",
+  {
+    description: "Create a new Telegram broadcast channel owned by your account.",
+    inputSchema: {
+      title: z.string().min(1).max(255).describe("Channel title"),
+      description: z
+        .string()
+        .max(255)
+        .optional()
+        .describe("Channel description (about)"),
+    },
+  },
+  async ({ title, description }) => {
+    const client = await telegramClientPromise;
+    const channel = await createBroadcastChannel(client, { title, description });
+
+    return {
+      content: [{ type: "text", text: JSON.stringify(channel, null, 2) }],
+    };
+  },
+);
+
+server.registerTool(
+  "tg_archive_chats",
   {
     description: "Move one or more chats/channels to Telegram Archive.",
     inputSchema: {
@@ -62,7 +86,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "telegram_unarchive_chats",
+  "tg_unarchive_chats",
   {
     description: "Restore one or more chats/channels from Telegram Archive.",
     inputSchema: {
@@ -84,7 +108,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "telegram_create_folder",
+  "tg_create_folder",
   {
     description:
       "Creates a new Telegram chat folder with optional channels and filter rules.",
@@ -183,7 +207,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "telegram_edit_folder",
+  "tg_edit_folder",
   {
     description:
       "Updates an existing Telegram chat folder: replace included channels or rename it.",
@@ -218,7 +242,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "telegram_get_folders",
+  "tg_get_folders",
   {
     description:
       "Returns the list of Telegram chat folders (tabs) configured in the user's account.",
@@ -234,7 +258,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "telegram_get_dialogs",
+  "tg_get_dialogs",
   {
     description:
       "Returns dialogs (channels, groups, chats) the user is subscribed to. Optionally filter by Telegram folder.",
@@ -261,7 +285,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "telegram_get_messages",
+  "tg_get_messages",
   {
     description:
       "Returns recent messages from a single channel or chat. Each message includes a `url` field linking to the original Telegram post — always cite these links when summarizing for the user.",
@@ -301,7 +325,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "telegram_get_recent_from_folder",
+  "tg_get_recent_from_folder",
   {
     description:
       "Fetches recent messages from all channels and groups in a Telegram folder, sorted by date descending. Each message includes a `url` field — always cite source links when summarizing for the user.",
@@ -338,7 +362,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "telegram_send_message",
+  "tg_send_message",
   {
     description:
       "Send a formatted text message to a Telegram user, group, or channel. Accepts @username, numeric id, or \"me\" (Saved Messages). Supports Markdown and HTML. Long plain text is split automatically; formatted messages must fit in 4096 chars.",
@@ -370,7 +394,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "telegram_get_recent_from_channels",
+  "tg_get_recent_from_channels",
   {
     description:
       "Fetches messages from multiple channels at once and returns them sorted by date descending. Each message includes a `url` field — always cite source links when summarizing for the user.",

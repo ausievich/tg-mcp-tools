@@ -19,7 +19,7 @@ npx tg-mcp-tools        # MCP server (stdio)
 
 ## Features
 
-- **11 MCP tools:** folders (create/edit), dialogs, messages, digests, send message, archive/unarchive
+- **12 MCP tools:** channels, folders (create/edit), dialogs, messages, digests, send message, archive/unarchive
 - **Post links** — every message includes a `url` field (`https://t.me/...`)
 - **Archived channels** — included when listing subscriptions
 - **QR login** — scan from the terminal, no SMS or in-app codes
@@ -96,16 +96,17 @@ After changing the config, reload Cursor (**Developer: Reload Window**).
 
 | Tool | Purpose |
 |------|---------|
-| `telegram_get_folders` | Telegram chat folders (tabs) with id and name |
-| `telegram_create_folder` | Create a folder with channels and filter rules |
-| `telegram_edit_folder` | Update an existing folder: replace included chats or rename it |
-| `telegram_get_dialogs` | List channels, groups, and chats; optional `folder` filter |
-| `telegram_get_messages` | Posts from one channel (@username or numeric id) |
-| `telegram_get_recent_from_channels` | Digest from multiple channels, sorted by date |
-| `telegram_get_recent_from_folder` | Digest from all channels/groups in a folder |
-| `telegram_send_message` | Send formatted text to a user (@username), chat id, or `"me"` (Markdown/HTML) |
-| `telegram_archive_chats` | Move chats/channels to Archive |
-| `telegram_unarchive_chats` | Restore chats/channels from Archive |
+| `tg_create_channel` | Create a new broadcast channel (title and optional description) |
+| `tg_get_folders` | Telegram chat folders (tabs) with id and name |
+| `tg_create_folder` | Create a folder with channels and filter rules |
+| `tg_edit_folder` | Update an existing folder: replace included chats or rename it |
+| `tg_get_dialogs` | List channels, groups, and chats; optional `folder` filter |
+| `tg_get_messages` | Posts from one channel (@username or numeric id) |
+| `tg_get_recent_from_channels` | Digest from multiple channels, sorted by date |
+| `tg_get_recent_from_folder` | Digest from all channels/groups in a folder |
+| `tg_send_message` | Send formatted text to a user (@username), chat id, or `"me"` (Markdown/HTML) |
+| `tg_archive_chats` | Move chats/channels to Archive |
+| `tg_unarchive_chats` | Restore chats/channels from Archive |
 
 Example prompts in Cursor:
 

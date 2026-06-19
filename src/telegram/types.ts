@@ -59,3 +59,15 @@ export interface EditFolderParams {
   includeChannels?: string[];
   emoticon?: string;
 }
+
+export interface CreateChannelParams {
+  title: string;
+  description?: string;
+}
+
+export interface ChannelInfo {
+  id: string;
+  name: string;
+  username?: string;
+  url?: string;
+}
