@@ -28,9 +28,7 @@
     "build": "tsc",
     "mcp": "node dist/index.js",
     "auth": "node dist/auth.js",
-    "preauth": "npm run build",
-    "premcp": "npm run build",
-    "prepublishOnly": "npm run build"
+    "inspect": "npm run build && npx -y @modelcontextprotocol/inspector npm run mcp"
   },
   "engines": {
     "node": ">=18"

@@ -92,6 +92,30 @@ For local development from a git clone, use:
 
 After changing the config, reload Cursor (**Developer: Reload Window**).
 
+## MCP Inspector
+
+Use the [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector) to call `tg_*` tools in the browser and inspect JSON-RPC traffic before wiring Cursor.
+
+From the project root (where `.env` lives):
+
+```bash
+npm run inspect
+```
+
+This builds the server, starts it via `npm run mcp` over stdio, and opens the Inspector UI (usually [http://localhost:6274](http://localhost:6274)). Use the **full URL printed in the terminal** if an auth token is required.
+
+**Links**
+
+- [MCP Inspector docs](https://modelcontextprotocol.io/docs/tools/inspector)
+- [Inspector on GitHub](https://github.com/modelcontextprotocol/inspector)
+- [`@modelcontextprotocol/inspector` on npm](https://www.npmjs.com/package/@modelcontextprotocol/inspector)
+
+CLI mode (no browser):
+
+```bash
+npx -y @modelcontextprotocol/inspector --cli npm run mcp
+```
+
 ## MCP tools
 
 | Tool | Purpose |
@@ -127,7 +151,8 @@ Example prompts in Cursor:
 |---------|-------------|
 | `npx tg-mcp-tools-auth` | One-time login; saves `TELEGRAM_SESSION` to `.env` in cwd |
 | `npx tg-mcp-tools` | Start the MCP server (stdio) |
-| `npm run auth` / `npm run mcp` | Same, when developing from a git clone |
+| `npm run auth` / `npm run mcp` | Start auth or MCP server (`npm run build` first when developing from a git clone) |
+| `npm run inspect` | Build and launch [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector) for this server |
 | `npm run build` | Compile TypeScript → `dist/` |
 
 ## Security
