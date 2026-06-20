@@ -1,6 +1,6 @@
 {
   "name": "tg-mcp-tools",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Local MCP server for your Telegram personal account — channels, digests, messaging, folders and more.",
   "type": "module",
   "license": "MIT",
