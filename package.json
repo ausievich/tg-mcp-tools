@@ -16,7 +16,8 @@
   ],
   "bin": {
     "tg-mcp-tools": "dist/index.js",
-    "tg-mcp-tools-auth": "dist/auth.js"
+    "tg-mcp-tools-auth": "dist/auth.js",
+    "tg-mcp-tools-logout": "dist/logout.js"
   },
   "files": [
     "dist",
@@ -28,6 +29,7 @@
     "build": "tsc",
     "mcp": "node dist/index.js",
     "auth": "node dist/auth.js",
+    "logout": "node dist/logout.js",
     "inspect": "npm run build && npx -y @modelcontextprotocol/inspector npm run mcp"
   },
   "engines": {

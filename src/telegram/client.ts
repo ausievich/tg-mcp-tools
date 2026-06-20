@@ -1,4 +1,16 @@
 import { MemoryStorage, TelegramClient } from "@mtcute/node";
+import { getHostDeviceModel } from "./device-model.js";
+
+export function createTelegramClientOptions(apiId: number, apiHash: string) {
+  return {
+    apiId,
+    apiHash,
+    storage: new MemoryStorage(),
+    initConnectionOptions: {
+      deviceModel: `tg-mcp-tools on ${getHostDeviceModel()}`,
+    },
+  };
+}
 
 let client: TelegramClient | null = null;
 
@@ -8,11 +20,7 @@ export async function getTelegramClient(
   session: string,
 ): Promise<TelegramClient> {
   if (!client) {
-    client = new TelegramClient({
-      apiId,
-      apiHash,
-      storage: new MemoryStorage(),
-    });
+    client = new TelegramClient(createTelegramClientOptions(apiId, apiHash));
     await client.importSession(session, true);
   }
   return client;

@@ -1,8 +1,9 @@
 #!/usr/bin/env node
-import { MemoryStorage, TelegramClient } from "@mtcute/node";
+import { TelegramClient } from "@mtcute/node";
 import qrcode from "qrcode-terminal";
 import { envFilePath, loadAuthConfig } from "./config.js";
 import { updateEnvFileVariable } from "./env-file.js";
+import { createTelegramClientOptions } from "./telegram/client.js";
 
 function printQr(url: string, expires: Date): void {
   console.log(`\nScan before ${expires.toISOString()}:`);
@@ -13,11 +14,9 @@ function printQr(url: string, expires: Date): void {
 async function main(): Promise<void> {
   const { TELEGRAM_API_ID, TELEGRAM_API_HASH } = loadAuthConfig();
 
-  const client = new TelegramClient({
-    apiId: TELEGRAM_API_ID,
-    apiHash: TELEGRAM_API_HASH,
-    storage: new MemoryStorage(),
-  });
+  const client = new TelegramClient(
+    createTelegramClientOptions(TELEGRAM_API_ID, TELEGRAM_API_HASH),
+  );
 
   console.log(
     "On phone: Telegram → Settings → Devices → Link Desktop Device → scan QR below.\n",

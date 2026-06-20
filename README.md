@@ -150,8 +150,9 @@ Example prompts in Cursor:
 | Command | Description |
 |---------|-------------|
 | `npx tg-mcp-tools-auth` | One-time login; saves `TELEGRAM_SESSION` to `.env` in cwd |
+| `npx tg-mcp-tools-logout` | Terminate the current Telegram session and clear `TELEGRAM_SESSION` in `.env` |
 | `npx tg-mcp-tools` | Start the MCP server (stdio) |
-| `npm run auth` / `npm run mcp` | Start auth or MCP server (`npm run build` first when developing from a git clone) |
+| `npm run auth` / `npm run logout` / `npm run mcp` | Auth, logout, or MCP server (`npm run build` first when developing from a git clone) |
 | `npm run inspect` | Build and launch [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector) for this server |
 | `npm run build` | Compile TypeScript → `dist/` |
 
@@ -169,7 +170,8 @@ src/
 ├── env-file.ts         # update .env values after auth
 ├── telegram-client.ts  # mtcute: dialogs, history, post URLs
 ├── index.ts            # MCP server and tool registration
-└── auth.ts             # CLI auth (QR)
+├── auth.ts             # CLI auth (QR)
+└── logout.ts           # CLI logout (revoke session)
 ```
 
 ## Stack
