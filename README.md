@@ -1,8 +1,8 @@
-# tg-mcp-tools
+# tg-mcp
 
-[![npm version](https://img.shields.io/npm/v/tg-mcp-tools?style=flat-square&color=cb3837&logo=npm&logoColor=white)](https://www.npmjs.com/package/tg-mcp-tools)
-[![License: MIT](https://img.shields.io/npm/l/tg-mcp-tools?style=flat-square)](https://github.com/ausievich/tg-mcp-tools/blob/main/LICENSE)
-[![Node.js](https://img.shields.io/node/v/tg-mcp-tools?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![npm version](https://img.shields.io/npm/v/tg-mcp?style=flat-square&color=cb3837&logo=npm&logoColor=white)](https://www.npmjs.com/package/tg-mcp)
+[![License: MIT](https://img.shields.io/npm/l/tg-mcp?style=flat-square)](https://github.com/ausievich/tg-mcp-tools/blob/main/LICENSE)
+[![Node.js](https://img.shields.io/node/v/tg-mcp?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
 
 A local MCP server for Cursor and Claude Desktop. It reads your Telegram subscriptions over MTProto (personal account, not a bot) and exposes channel posts to the agent for digests and natural-language questions like “what’s new in my Travel folder this week?”
 
@@ -26,8 +26,8 @@ Use this path if you consume the published package — no git clone needed.
 
 ```bash
 mkdir my-telegram-mcp && cd my-telegram-mcp
-npm install tg-mcp-tools
-cp node_modules/tg-mcp-tools/.env.example .env
+npm install tg-mcp
+cp node_modules/tg-mcp/.env.example .env
 ```
 
 **2. Add API credentials to `.env`**
@@ -40,7 +40,7 @@ TELEGRAM_API_HASH=your_api_hash
 **3. Authorize** (QR in terminal; session is saved to `.env`)
 
 ```bash
-npx tg-mcp-tools-auth
+npx tg-mcp-auth
 ```
 
 On your phone: **Telegram → Settings → Devices → Link Desktop Device** → scan the QR code. `TELEGRAM_SESSION` is written to `.env` automatically.
@@ -54,7 +54,7 @@ Add to `.cursor/mcp.json` in the same directory as `.env`:
   "mcpServers": {
     "telegram": {
       "command": "npx",
-      "args": ["-y", "tg-mcp-tools"]
+      "args": ["-y", "tg-mcp"]
     }
   }
 }
@@ -131,7 +131,7 @@ Example prompts in Cursor:
 - **Do not commit `.env`** — it contains your Telegram session (full account access)
 - Never share `TELEGRAM_SESSION` in logs, issues, or chats
 - Revoke API credentials or sessions at [my.telegram.org](https://my.telegram.org)
-- Log out locally: `npx tg-mcp-tools-logout` (npm) or `npm run logout` (git clone)
+- Log out locally: `npx tg-mcp-logout` (npm) or `npm run logout` (git clone)
 
 ## Stack
 

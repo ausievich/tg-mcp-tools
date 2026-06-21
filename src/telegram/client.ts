@@ -7,7 +7,7 @@ export function createTelegramClientOptions(apiId: number, apiHash: string) {
     apiHash,
     storage: new MemoryStorage(),
     initConnectionOptions: {
-      deviceModel: `tg-mcp-tools on ${getHostDeviceModel()}`,
+      deviceModel: `tg-mcp on ${getHostDeviceModel()}`,
     },
   };
 }
