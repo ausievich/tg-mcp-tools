@@ -1,21 +1,10 @@
 # tg-mcp-tools
 
 [![npm version](https://img.shields.io/npm/v/tg-mcp-tools?style=flat-square&color=cb3837&logo=npm&logoColor=white)](https://www.npmjs.com/package/tg-mcp-tools)
+[![License: MIT](https://img.shields.io/npm/l/tg-mcp-tools?style=flat-square)](https://github.com/ausievich/tg-mcp-tools/blob/main/LICENSE)
+[![Node.js](https://img.shields.io/node/v/tg-mcp-tools?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
 
 A local MCP server for Cursor and Claude Desktop. It reads your Telegram subscriptions over MTProto (personal account, not a bot) and exposes channel posts to the agent for digests and natural-language questions like “what’s new in my Travel folder this week?”
-
-## Install
-
-```bash
-npm install -g tg-mcp-tools
-```
-
-Or run without installing (recommended for MCP):
-
-```bash
-npx tg-mcp-tools-auth   # one-time login
-npx tg-mcp-tools        # MCP server (stdio)
-```
 
 ## Features
 
@@ -29,40 +18,36 @@ npx tg-mcp-tools        # MCP server (stdio)
 - Node.js 18+
 - Telegram API credentials from [my.telegram.org/apps](https://my.telegram.org/apps)
 
-## Quick start
+## Quick start (npm package)
 
-Create a project directory, add credentials, authorize, then connect MCP.
+Use this path if you consume the published package — no git clone needed.
+
+**1. Create a project directory and install the package**
 
 ```bash
 mkdir my-telegram-mcp && cd my-telegram-mcp
-cp path/to/node_modules/tg-mcp-tools/.env.example .env
-# or from a git clone: cp .env.example .env
+npm install tg-mcp-tools
+cp node_modules/tg-mcp-tools/.env.example .env
 ```
 
-Fill in `.env`:
+**2. Add API credentials to `.env`**
 
 ```env
 TELEGRAM_API_ID=12345678
 TELEGRAM_API_HASH=your_api_hash
 ```
 
-Authorize (scan QR in terminal; session is saved to `.env` in the current directory):
+**3. Authorize** (QR in terminal; session is saved to `.env`)
 
 ```bash
 npx tg-mcp-tools-auth
-# or, from a git clone: npm run auth
 ```
 
-Verify the MCP server starts:
+On your phone: **Telegram → Settings → Devices → Link Desktop Device** → scan the QR code. `TELEGRAM_SESSION` is written to `.env` automatically.
 
-```bash
-npx tg-mcp-tools
-# or, from a git clone: npm run mcp
-```
+**4. Connect MCP in Cursor**
 
-## Cursor setup
-
-Add to `.cursor/mcp.json` in your project (where `.env` lives):
+Add to `.cursor/mcp.json` in the same directory as `.env`:
 
 ```json
 {
@@ -75,9 +60,35 @@ Add to `.cursor/mcp.json` in your project (where `.env` lives):
 }
 ```
 
-The server loads `.env` from the **current working directory** (your project root). You don't need to duplicate env vars in `mcp.json` if `.env` is present.
+The server loads `.env` from the **current working directory** (your project root). You don't need to duplicate env vars in `mcp.json`.
 
-For local development from a git clone, use:
+Reload Cursor after changing the config (**Developer: Reload Window**).
+
+---
+
+## Development (git clone)
+
+Use this path if you work from the repository — local `src/`, rebuilds, and [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector).
+
+**1. Clone and install**
+
+```bash
+git clone https://github.com/ausievich/tg-mcp-tools.git
+cd tg-mcp-tools
+npm install
+cp .env.example .env
+```
+
+**2. Add API credentials to `.env`** (same as above)
+
+**3. Build and authorize**
+
+```bash
+npm run build
+npm run auth
+```
+
+**4. Connect MCP in Cursor**
 
 ```json
 {
@@ -90,31 +101,9 @@ For local development from a git clone, use:
 }
 ```
 
-After changing the config, reload Cursor (**Developer: Reload Window**).
+Run `npm run build` after code changes. `npm run inspect` builds and opens MCP Inspector for interactive tool testing.
 
-## MCP Inspector
-
-Use the [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector) to call `tg_*` tools in the browser and inspect JSON-RPC traffic before wiring Cursor.
-
-From the project root (where `.env` lives):
-
-```bash
-npm run inspect
-```
-
-This builds the server, starts it via `npm run mcp` over stdio, and opens the Inspector UI (usually [http://localhost:6274](http://localhost:6274)). Use the **full URL printed in the terminal** if an auth token is required.
-
-**Links**
-
-- [MCP Inspector docs](https://modelcontextprotocol.io/docs/tools/inspector)
-- [Inspector on GitHub](https://github.com/modelcontextprotocol/inspector)
-- [`@modelcontextprotocol/inspector` on npm](https://www.npmjs.com/package/@modelcontextprotocol/inspector)
-
-CLI mode (no browser):
-
-```bash
-npx -y @modelcontextprotocol/inspector --cli npm run mcp
-```
+---
 
 ## MCP tools
 
@@ -137,42 +126,12 @@ Example prompts in Cursor:
 
 > What’s new in my **Travel** folder this week?
 
-## Authorization
-
-1. Run `npx tg-mcp-tools-auth` from the directory where `.env` should live
-2. On your phone: **Telegram → Settings → Devices → Link Desktop Device**
-3. Scan the QR code in the terminal
-4. Enter your 2FA password if prompted
-5. `TELEGRAM_SESSION` is written to `.env` automatically
-
-## Scripts
-
-| Command | Description |
-|---------|-------------|
-| `npx tg-mcp-tools-auth` | One-time login; saves `TELEGRAM_SESSION` to `.env` in cwd |
-| `npx tg-mcp-tools-logout` | Terminate the current Telegram session and clear `TELEGRAM_SESSION` in `.env` |
-| `npx tg-mcp-tools` | Start the MCP server (stdio) |
-| `npm run auth` / `npm run logout` / `npm run mcp` | Auth, logout, or MCP server (`npm run build` first when developing from a git clone) |
-| `npm run inspect` | Build and launch [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector) for this server |
-| `npm run build` | Compile TypeScript → `dist/` |
-
 ## Security
 
 - **Do not commit `.env`** — it contains your Telegram session (full account access)
 - Never share `TELEGRAM_SESSION` in logs, issues, or chats
 - Revoke API credentials or sessions at [my.telegram.org](https://my.telegram.org)
-
-## Project layout
-
-```
-src/
-├── config.ts           # load .env from repo root
-├── env-file.ts         # update .env values after auth
-├── telegram-client.ts  # mtcute: dialogs, history, post URLs
-├── index.ts            # MCP server and tool registration
-├── auth.ts             # CLI auth (QR)
-└── logout.ts           # CLI logout (revoke session)
-```
+- Log out locally: `npx tg-mcp-tools-logout` (npm) or `npm run logout` (git clone)
 
 ## Stack
 
