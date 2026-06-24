@@ -8,7 +8,7 @@ A local MCP server for Cursor and Claude Desktop. It reads your Telegram subscri
 
 ## Features
 
-- **13 MCP tools:** channels (create/rename), folders (create/edit), dialogs, messages, digests, send message, archive/unarchive
+- **15 MCP tools:** channels (create/rename), folders (create/edit), dialogs, messages, search, digests, send message, archive/unarchive
 - **Post links** — every message includes a `url` field (`https://t.me/...`)
 - **Archived channels** — included when listing subscriptions
 - **QR login** — scan from the terminal, no SMS or in-app codes
@@ -115,7 +115,9 @@ Run `npm run build` after code changes. `npm run inspect` builds and opens MCP I
 | `tg_create_folder` | Create a folder with channels and filter rules |
 | `tg_edit_folder` | Update an existing folder: replace included chats or rename it |
 | `tg_get_dialogs` | List channels, groups, and chats; optional `folder` filter |
-| `tg_get_messages` | Posts from one channel (@username or numeric id) |
+| `tg_get_messages` | Posts from one channel; pagination (`beforeMessageId`), date filters (`sinceHours`, `minDate`) |
+| `tg_search_messages` | Full-text search in one chat across entire history |
+| `tg_search_in_folder` | Search by text across all channels/groups in a folder |
 | `tg_get_recent_from_channels` | Digest from multiple channels, sorted by date |
 | `tg_get_recent_from_folder` | Digest from all channels/groups in a folder |
 | `tg_send_message` | Send formatted text to a user (@username), chat id, or `"me"` (Markdown/HTML) |
@@ -125,6 +127,8 @@ Run `npm run build` after code changes. `npm run inspect` builds and opens MCP I
 Example prompts in Cursor:
 
 > What’s new in my **Travel** folder this week?
+
+> Search my **Health** folder for **Dentist**
 
 ## Security
 

@@ -5,8 +5,8 @@ import {
   getPeerName,
   getPeerUsername,
   normalizeFolderRef,
-} from "./peers.js";
-import type { DialogInfo, FolderRef } from "./types.js";
+} from "../../shared/peers.js";
+import type { DialogInfo, FolderRef } from "../../shared/types.js";
 
 function mapDialogToInfo(peer: Peer, unreadCount: number): DialogInfo {
   const info: DialogInfo = {

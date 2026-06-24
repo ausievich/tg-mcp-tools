@@ -4,8 +4,8 @@ import {
   getPeerName,
   getPeerUsername,
   normalizeChannelRef,
-} from "./peers.js";
-import type { ChannelInfo, CreateChannelParams } from "./types.js";
+} from "../../shared/peers.js";
+import type { ChannelInfo, CreateChannelParams } from "../../shared/types.js";
 
 export async function createBroadcastChannel(
   telegramClient: TelegramClient,

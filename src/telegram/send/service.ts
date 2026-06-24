@@ -1,5 +1,5 @@
 import { TelegramClient, html, md, type InputText } from "@mtcute/node";
-import { normalizeChannelRef } from "./peers.js";
+import { normalizeChannelRef } from "../../shared/peers.js";
 
 const TELEGRAM_MAX_MESSAGE_LENGTH = 4096;
 

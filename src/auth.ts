@@ -3,7 +3,7 @@ import { TelegramClient } from "@mtcute/node";
 import qrcode from "qrcode-terminal";
 import { envFilePath, loadAuthConfig } from "./config.js";
 import { updateEnvFileVariable } from "./env-file.js";
-import { createTelegramClientOptions } from "./telegram/client.js";
+import { createTelegramClientOptions } from "./shared/client.js";
 
 function printQr(url: string, expires: Date): void {
   console.log(`\nScan before ${expires.toISOString()}:`);

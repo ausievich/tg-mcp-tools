@@ -2,7 +2,7 @@
 import { TelegramClient } from "@mtcute/node";
 import { envFilePath, loadConfig } from "./config.js";
 import { updateEnvFileVariable } from "./env-file.js";
-import { createTelegramClientOptions } from "./telegram/client.js";
+import { createTelegramClientOptions } from "./shared/client.js";
 
 async function clearLocalSession(): Promise<void> {
   await updateEnvFileVariable(envFilePath, "TELEGRAM_SESSION", "");

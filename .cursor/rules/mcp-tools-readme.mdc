@@ -1,12 +1,12 @@
 ---
 description: Keep README in sync when MCP tools change
-globs: src/index.ts
+globs: src/telegram/**/tools.ts
 alwaysApply: false
 ---
 
 # MCP tools → README
 
-When you add, remove, or rename an MCP tool (`server.registerTool` in `src/index.ts`), update `README.md` in the same change:
+When you add, remove, or rename an MCP tool (`server.registerTool` in `src/telegram/*/tools.ts`), update `README.md` in the same change:
 
 1. **Features** — bump the MCP tool count and adjust the summary line if needed.
 2. **MCP tools table** — add, remove, or rename the row; keep the table sorted logically (folders → dialogs → messages → digests → send → archive).

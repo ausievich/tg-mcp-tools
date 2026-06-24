@@ -1,6 +1,6 @@
 import { TelegramClient, type tl } from "@mtcute/node";
-import { normalizeFolderRef, resolveInputPeers } from "./peers.js";
-import type { CreateFolderParams, EditFolderParams, FolderInfo, FolderRef } from "./types.js";
+import { normalizeFolderRef, resolveInputPeers } from "../../shared/peers.js";
+import type { CreateFolderParams, EditFolderParams, FolderInfo, FolderRef } from "../../shared/types.js";
 
 function mapDialogFilter(filter: tl.TypeDialogFilter): FolderInfo | null {
   if (filter._ === "dialogFilterDefault") {
