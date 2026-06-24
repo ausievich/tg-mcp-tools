@@ -25,7 +25,9 @@
     "LICENSE"
   ],
   "scripts": {
+    "clean": "node --input-type=module -e \"import { rmSync } from 'node:fs'; rmSync('dist',{recursive:true,force:true})\"",
     "build": "tsc",
+    "prepublishOnly": "npm run clean && npm run build",
     "mcp": "node dist/index.js",
     "auth": "node dist/auth.js",
     "logout": "node dist/logout.js",
