@@ -71,3 +71,12 @@ export interface ChannelInfo {
   username?: string;
   url?: string;
 }
+
+export interface SimilarChannelInfo {
+  id: string;
+  name: string;
+  username?: string;
+  url?: string;
+  basedOn?: string;
+  totalAvailable?: number;
+}

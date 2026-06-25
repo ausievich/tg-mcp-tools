@@ -3,13 +3,12 @@
 [![npm version](https://img.shields.io/npm/v/tg-mcp?style=flat-square&color=cb3837&logo=npm&logoColor=white)](https://www.npmjs.com/package/tg-mcp)
 [![License: MIT](https://img.shields.io/npm/l/tg-mcp?style=flat-square)](https://github.com/ausievich/tg-mcp-tools/blob/main/LICENSE)
 [![Node.js](https://img.shields.io/node/v/tg-mcp?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![YouTube](https://img.shields.io/badge/YouTube-demo-FF0000?style=flat-square&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=XMBXVLT50vw)
 
 A local MCP server for Cursor and Claude Desktop. It reads your Telegram subscriptions over MTProto (personal account, not a bot) and exposes channel posts to the agent for digests and natural-language questions like “what’s new in my Travel folder this week?”
 
 ## Features
 
-- **15 MCP tools:** channels (create/rename), folders (create/edit), dialogs, messages, search, digests, send message, archive/unarchive
+- **16 MCP tools:** channels (create/rename, similar), folders (create/edit), dialogs, messages, search, digests, send message, archive/unarchive
 - **Post links** — every message includes a `url` field (`https://t.me/...`)
 - **Archived channels** — included when listing subscriptions
 - **QR login** — scan from the terminal, no SMS or in-app codes
@@ -142,6 +141,7 @@ Run `npm run build` after code changes. `npm run inspect` builds and opens MCP I
 |------|---------|
 | `tg_create_channel` | Create a new broadcast channel (title and optional description) |
 | `tg_set_channel_title` | Rename a channel or group (requires admin rights) |
+| `tg_get_similar_channels` | Telegram-recommended similar public channels (by channel, folder, or all subscriptions) |
 | `tg_get_folders` | Telegram chat folders (tabs) with id and name |
 | `tg_create_folder` | Create a folder with channels and filter rules |
 | `tg_edit_folder` | Update an existing folder: replace included chats or rename it |
@@ -160,6 +160,8 @@ Example prompts:
 > What’s new in my **Travel** folder this week?
 
 > Search my **Health** folder for **Dentist**
+
+> What channels similar to my **Crypto** folder would Telegram recommend?
 
 ## Security
 

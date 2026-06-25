@@ -2,10 +2,11 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { ToolContext } from "../../mcp/context.js";
 import { jsonResult } from "../../mcp/helpers.js";
-import { channelIdsSchema } from "../../mcp/schemas.js";
+import { channelIdsSchema, folderSchema } from "../../mcp/schemas.js";
 import {
   archiveChats,
   createBroadcastChannel,
+  fetchSimilarChannels,
   setChannelTitle,
   unarchiveChats,
 } from "./service.js";
@@ -78,6 +79,31 @@ export function registerChatsTools(server: McpServer, ctx: ToolContext): void {
       const client = await ctx.getClient();
       await unarchiveChats(client, channelIds);
       return jsonResult({ unarchived: channelIds });
+    },
+  );
+
+  server.registerTool(
+    "tg_get_similar_channels",
+    {
+      description:
+        "Get Telegram-recommended public channels similar to a channel, all channels in a folder, or your overall subscriptions. Only returns channels you are not subscribed to yet. Non-Premium accounts may receive a limited result set; check totalAvailable for the full count.",
+      inputSchema: {
+        channelId: z
+          .string()
+          .min(1)
+          .optional()
+          .describe("Numeric ID or @username of a channel to find similar channels for"),
+        folder: folderSchema
+          .optional()
+          .describe(
+            "Folder id or name — recommendations are collected from all channels in the folder and deduplicated",
+          ),
+      },
+    },
+    async ({ channelId, folder }) => {
+      const client = await ctx.getClient();
+      const channels = await fetchSimilarChannels(client, { channelId, folder });
+      return jsonResult(channels);
     },
   );
 }
