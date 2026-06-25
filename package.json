@@ -37,7 +37,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.12.1",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "@mtcute/node": "^0.30.1",
     "dotenv": "^16.5.0",
     "qrcode-terminal": "^0.12.0",

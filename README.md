@@ -45,7 +45,9 @@ npx tg-mcp-auth
 
 On your phone: **Telegram → Settings → Devices → Link Desktop Device** → scan the QR code. `TELEGRAM_SESSION` is written to `.env` automatically.
 
-**4. Connect MCP in Cursor**
+**4. Connect MCP**
+
+### Cursor
 
 Add to `.cursor/mcp.json` in the same directory as `.env`:
 
@@ -63,6 +65,32 @@ Add to `.cursor/mcp.json` in the same directory as `.env`:
 The server loads `.env` from the **current working directory** (your project root). You don't need to duplicate env vars in `mcp.json`.
 
 Reload Cursor after changing the config (**Developer: Reload Window**).
+
+### Claude Desktop
+
+Open the config file: **Settings → Developer → Edit Config** 
+
+Add a `telegram` entry under `mcpServers`. Put credentials in `env` — Claude Desktop does not load `.env` from disk:
+
+```json
+{
+  "mcpServers": {
+    "telegram": {
+      "command": "npx",
+      "args": ["-y", "tg-mcp"],
+      "env": {
+        "TELEGRAM_API_ID": "12345678",
+        "TELEGRAM_API_HASH": "your_api_hash",
+        "TELEGRAM_SESSION": "your_session_string"
+      }
+    }
+  }
+}
+```
+
+Copy the three values from `.env` after `npx tg-mcp-auth`. If you re-authorize, update `TELEGRAM_SESSION` here too.
+
+Fully quit Claude Desktop (system tray → **Exit**), then relaunch. The connector appears under **Connectors**.
 
 ---
 
@@ -88,7 +116,9 @@ npm run build
 npm run auth
 ```
 
-**4. Connect MCP in Cursor**
+**4. Connect MCP**
+
+### Cursor
 
 ```json
 {
@@ -124,7 +154,7 @@ Run `npm run build` after code changes. `npm run inspect` builds and opens MCP I
 | `tg_archive_chats` | Move chats/channels to Archive |
 | `tg_unarchive_chats` | Restore chats/channels from Archive |
 
-Example prompts in Cursor:
+Example prompts:
 
 > What’s new in my **Travel** folder this week?
 
@@ -133,6 +163,7 @@ Example prompts in Cursor:
 ## Security
 
 - **Do not commit `.env`** — it contains your Telegram session (full account access)
+- **Claude Desktop:** `claude_desktop_config.json` with `env` holds the same secrets — treat it like `.env`
 - Never share `TELEGRAM_SESSION` in logs, issues, or chats
 - Revoke API credentials or sessions at [my.telegram.org](https://my.telegram.org)
 - Log out locally: `npx tg-mcp-logout` (npm) or `npm run logout` (git clone)
