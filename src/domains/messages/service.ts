@@ -8,7 +8,7 @@ import {
 } from "../../shared/peers.js";
 import type { FolderRef, MessageInfo } from "../../shared/types.js";
 import { buildTelegramPostUrl } from "../../shared/urls.js";
-import { fetchDialogs } from "../dialogs/service.js";
+import { fetchDialogs } from "../subscriptions/service.js";
 
 export interface FetchMessagesOptions {
   sinceHours?: number;

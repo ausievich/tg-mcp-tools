@@ -80,3 +80,14 @@ export interface SimilarChannelInfo {
   basedOn?: string;
   totalAvailable?: number;
 }
+
+export type JoinChannelStatus = "joined" | "request_sent" | "webview";
+
+export interface JoinChannelResult {
+  status: JoinChannelStatus;
+  channelId: string;
+  id?: string;
+  name?: string;
+  username?: string;
+  url?: string;
+}

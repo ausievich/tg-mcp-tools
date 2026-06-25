@@ -2,16 +2,16 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { ToolContext } from "../../mcp/context.js";
 import { jsonResult } from "../../mcp/helpers.js";
-import { channelIdsSchema, folderSchema } from "../../mcp/schemas.js";
+import { folderSchema } from "../../mcp/schemas.js";
 import {
-  archiveChats,
   createBroadcastChannel,
   fetchSimilarChannels,
+  joinChannel,
+  leaveChannel,
   setChannelTitle,
-  unarchiveChats,
 } from "./service.js";
 
-export function registerChatsTools(server: McpServer, ctx: ToolContext): void {
+export function registerChannelTools(server: McpServer, ctx: ToolContext): void {
   server.registerTool(
     "tg_create_channel",
     {
@@ -53,32 +53,44 @@ export function registerChatsTools(server: McpServer, ctx: ToolContext): void {
   );
 
   server.registerTool(
-    "tg_archive_chats",
+    "tg_join_channel",
     {
-      description: "Move one or more chats/channels to Telegram Archive.",
+      description:
+        "Subscribe to a public Telegram channel or group, or request to join via invite link. Accepts @username, numeric id, or t.me link.",
       inputSchema: {
-        channelIds: channelIdsSchema,
+        channelId: z
+          .string()
+          .min(1)
+          .describe("Channel @username, numeric id, or invite link (https://t.me/...)"),
       },
     },
-    async ({ channelIds }) => {
+    async ({ channelId }) => {
       const client = await ctx.getClient();
-      await archiveChats(client, channelIds);
-      return jsonResult({ archived: channelIds });
+      const result = await joinChannel(client, channelId);
+      return jsonResult(result);
     },
   );
 
   server.registerTool(
-    "tg_unarchive_chats",
+    "tg_leave_channel",
     {
-      description: "Restore one or more chats/channels from Telegram Archive.",
+      description:
+        "Unsubscribe from a Telegram channel or leave a group. Accepts @username or numeric id. Channel owners cannot leave their own channel.",
       inputSchema: {
-        channelIds: channelIdsSchema,
+        channelId: z
+          .string()
+          .min(1)
+          .describe("Channel or group @username or numeric id"),
+        clearHistory: z
+          .boolean()
+          .optional()
+          .describe("Clear chat history after leaving (legacy group chats only)"),
       },
     },
-    async ({ channelIds }) => {
+    async ({ channelId, clearHistory }) => {
       const client = await ctx.getClient();
-      await unarchiveChats(client, channelIds);
-      return jsonResult({ unarchived: channelIds });
+      const result = await leaveChannel(client, channelId, { clearHistory });
+      return jsonResult(result);
     },
   );
 

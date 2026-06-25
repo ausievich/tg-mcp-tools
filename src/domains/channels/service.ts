@@ -1,5 +1,5 @@
-import { Chat, TelegramClient, type InputPeerLike, type Peer, type tl } from "@mtcute/node";
-import { fetchDialogs } from "../dialogs/service.js";
+import { Chat, TelegramClient, type Peer, type tl } from "@mtcute/node";
+import { fetchDialogs } from "../subscriptions/service.js";
 import {
   getPeerId,
   getPeerName,
@@ -10,8 +10,24 @@ import type {
   ChannelInfo,
   CreateChannelParams,
   FolderRef,
+  JoinChannelResult,
   SimilarChannelInfo,
 } from "../../shared/types.js";
+
+function mapPeerToChannelInfo(peer: Peer): ChannelInfo {
+  const info: ChannelInfo = {
+    id: getPeerId(peer),
+    name: getPeerName(peer),
+  };
+
+  const username = getPeerUsername(peer);
+  if (username) {
+    info.username = username;
+    info.url = `https://t.me/${username}`;
+  }
+
+  return info;
+}
 
 function mapSimilarChannel(
   peer: Peer,
@@ -80,18 +96,7 @@ export async function createBroadcastChannel(
     description: params.description,
   });
 
-  const info: ChannelInfo = {
-    id: getPeerId(channel),
-    name: getPeerName(channel),
-  };
-
-  const username = getPeerUsername(channel);
-  if (username) {
-    info.username = username;
-    info.url = `https://t.me/${username}`;
-  }
-
-  return info;
+  return mapPeerToChannelInfo(channel);
 }
 
 export async function setChannelTitle(
@@ -103,38 +108,54 @@ export async function setChannelTitle(
   await telegramClient.setChatTitle(peerRef, title);
 
   const channel = await telegramClient.getPeer(peerRef);
-  const info: ChannelInfo = {
-    id: getPeerId(channel),
-    name: getPeerName(channel),
-  };
+  return mapPeerToChannelInfo(channel);
+}
 
-  const username = getPeerUsername(channel);
-  if (username) {
-    info.username = username;
-    info.url = `https://t.me/${username}`;
+export async function joinChannel(
+  telegramClient: TelegramClient,
+  channelId: string,
+): Promise<JoinChannelResult> {
+  const trimmed = channelId.trim();
+  const joinRef = /t\.me\//i.test(trimmed) ? trimmed : normalizeChannelRef(trimmed);
+  const result = await telegramClient.joinChat(joinRef);
+
+  if (result.status === "request_sent") {
+    return { status: "request_sent", channelId: trimmed };
   }
 
-  return info;
+  if (result.status === "webview") {
+    const botUsername = result.bot.username ?? undefined;
+    return {
+      status: "webview",
+      channelId: trimmed,
+      username: botUsername,
+      url: botUsername ? `https://t.me/${botUsername}` : undefined,
+    };
+  }
+
+  const channel = mapPeerToChannelInfo(result.chat);
+  return {
+    status: "joined",
+    channelId: trimmed,
+    id: channel.id,
+    name: channel.name,
+    username: channel.username,
+    url: channel.url,
+  };
 }
 
-export async function archiveChats(
+export async function leaveChannel(
   telegramClient: TelegramClient,
-  channelIds: string[],
-): Promise<void> {
-  const peers: InputPeerLike[] = channelIds.map((channelId) =>
-    normalizeChannelRef(channelId),
+  channelId: string,
+  options?: { clearHistory?: boolean },
+): Promise<{ channelId: string }> {
+  const trimmed = channelId.trim();
+  const peerRef = normalizeChannelRef(trimmed);
+  await telegramClient.leaveChat(
+    peerRef,
+    options?.clearHistory ? { clear: true } : undefined,
   );
-  await telegramClient.archiveChats(peers);
-}
-
-export async function unarchiveChats(
-  telegramClient: TelegramClient,
-  channelIds: string[],
-): Promise<void> {
-  const peers: InputPeerLike[] = channelIds.map((channelId) =>
-    normalizeChannelRef(channelId),
-  );
-  await telegramClient.unarchiveChats(peers);
+  return { channelId: trimmed };
 }
 
 export async function fetchSimilarChannels(

@@ -8,7 +8,7 @@ A local MCP server for Cursor and Claude Desktop. It reads your Telegram subscri
 
 ## Features
 
-- **16 MCP tools:** channels (create/rename, similar), folders (create/edit), dialogs, messages, search, digests, send message, archive/unarchive
+- **20 MCP tools** across domains: `channels` (create/rename/join/leave/discover), `subscriptions` (list/archive/mute), `folders`, `messages`, `send`
 - **Post links** — every message includes a `url` field (`https://t.me/...`)
 - **Archived channels** — included when listing subscriptions
 - **QR login** — scan from the terminal, no SMS or in-app codes
@@ -142,6 +142,10 @@ Run `npm run build` after code changes. `npm run inspect` builds and opens MCP I
 | `tg_create_channel` | Create a new broadcast channel (title and optional description) |
 | `tg_set_channel_title` | Rename a channel or group (requires admin rights) |
 | `tg_get_similar_channels` | Telegram-recommended similar public channels (by channel, folder, or all subscriptions) |
+| `tg_join_channel` | Subscribe to a channel/group by @username, id, or invite link |
+| `tg_leave_channel` | Unsubscribe from a channel or leave a group |
+| `tg_mute_chats` | Mute notifications for chats/channels (forever by default) |
+| `tg_unmute_chats` | Restore notifications for muted chats/channels |
 | `tg_get_folders` | Telegram chat folders (tabs) with id and name |
 | `tg_create_folder` | Create a folder with channels and filter rules |
 | `tg_edit_folder` | Update an existing folder: replace included chats or rename it |
