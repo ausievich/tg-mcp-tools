@@ -3,6 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/tg-mcp?style=flat-square&color=cb3837&logo=npm&logoColor=white)](https://www.npmjs.com/package/tg-mcp)
 [![License: MIT](https://img.shields.io/npm/l/tg-mcp?style=flat-square)](https://github.com/ausievich/tg-mcp-tools/blob/main/LICENSE)
 [![Node.js](https://img.shields.io/node/v/tg-mcp?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![YouTube](https://img.shields.io/badge/YouTube-demo-FF0000?style=flat-square&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=XMBXVLT50vw)
 
 A local MCP server for Cursor and Claude Desktop. It reads your Telegram subscriptions over MTProto (personal account, not a bot) and exposes channel posts to the agent for digests and natural-language questions like “what’s new in my Travel folder this week?”
 
