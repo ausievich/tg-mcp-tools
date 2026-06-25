@@ -1,4 +1,4 @@
-import type { FetchMessagesOptions } from "../telegram/messages/service.js";
+import type { FetchMessagesOptions } from "../domains/messages/service.js";
 
 export function jsonResult(data: unknown) {
   return {
