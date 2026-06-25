@@ -8,6 +8,7 @@ import {
   fetchSimilarChannels,
   joinChannel,
   leaveChannel,
+  searchChannels,
   setChannelTitle,
 } from "./service.js";
 
@@ -115,6 +116,40 @@ export function registerChannelTools(server: McpServer, ctx: ToolContext): void 
     async ({ channelId, folder }) => {
       const client = await ctx.getClient();
       const channels = await fetchSimilarChannels(client, { channelId, folder });
+      return jsonResult(channels);
+    },
+  );
+
+  server.registerTool(
+    "tg_search_channels",
+    {
+      description:
+        "Search public Telegram channels and groups via Telegram's global search. " +
+        "Uses name/username matching (contacts.search) and/or post content search across public channels (searchGlobal). " +
+        "For topic discovery (e.g. NFT gifts), prefer mode 'both' or 'posts'. Name search needs at least 4 characters.",
+      inputSchema: {
+        query: z
+          .string()
+          .min(1)
+          .describe("Search query (e.g. NFT gifts, fragment, tonkeeper)"),
+        limit: z
+          .number()
+          .int()
+          .positive()
+          .max(50)
+          .optional()
+          .describe("Max channels to return (default 20, max 50)"),
+        mode: z
+          .enum(["name", "posts", "both"])
+          .optional()
+          .describe(
+            "name — match channel title/username; posts — channels with matching public posts; both — merge (default)",
+          ),
+      },
+    },
+    async ({ query, limit, mode }) => {
+      const client = await ctx.getClient();
+      const channels = await searchChannels(client, { query, limit, mode });
       return jsonResult(channels);
     },
   );

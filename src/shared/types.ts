@@ -81,6 +81,25 @@ export interface SimilarChannelInfo {
   totalAvailable?: number;
 }
 
+export type ChannelSearchSource = "name" | "posts";
+
+export interface ChannelSearchMatch {
+  date: string;
+  text: string;
+  url: string;
+}
+
+export interface ChannelSearchResult {
+  id: string;
+  name: string;
+  type: "channel" | "group";
+  username?: string;
+  url?: string;
+  memberCount?: number;
+  source: ChannelSearchSource;
+  matchedPost?: ChannelSearchMatch;
+}
+
 export type JoinChannelStatus = "joined" | "request_sent" | "webview";
 
 export interface JoinChannelResult {

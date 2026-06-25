@@ -8,7 +8,7 @@ A local MCP server for Cursor and Claude Desktop. It reads your Telegram subscri
 
 ## Features
 
-- **20 MCP tools** across domains: `channels` (create/rename/join/leave/discover), `subscriptions` (list/archive/mute), `folders`, `messages`, `send`
+- **20 MCP tools** across domains: `channels` (create/rename/join/leave/discover/search), `subscriptions` (list/archive/mute), `folders`, `messages`, `send`
 - **Post links** — every message includes a `url` field (`https://t.me/...`)
 - **Archived channels** — included when listing subscriptions
 - **QR login** — scan from the terminal, no SMS or in-app codes
@@ -142,6 +142,7 @@ Run `npm run build` after code changes. `npm run inspect` builds and opens MCP I
 | `tg_create_channel` | Create a new broadcast channel (title and optional description) |
 | `tg_set_channel_title` | Rename a channel or group (requires admin rights) |
 | `tg_get_similar_channels` | Telegram-recommended similar public channels (by channel, folder, or all subscriptions) |
+| `tg_search_channels` | Global search for public channels/groups by name or post content |
 | `tg_join_channel` | Subscribe to a channel/group by @username, id, or invite link |
 | `tg_leave_channel` | Unsubscribe from a channel or leave a group |
 | `tg_mute_chats` | Mute notifications for chats/channels (forever by default) |
@@ -166,6 +167,8 @@ Example prompts:
 > Search my **Health** folder for **Dentist**
 
 > What channels similar to my **Crypto** folder would Telegram recommend?
+
+> Find public channels about **NFT gifts** in Telegram search
 
 ## Security
 

@@ -8,11 +8,13 @@ import {
 } from "../../shared/peers.js";
 import type {
   ChannelInfo,
+  ChannelSearchResult,
   CreateChannelParams,
   FolderRef,
   JoinChannelResult,
   SimilarChannelInfo,
 } from "../../shared/types.js";
+import { buildTelegramPostUrl } from "../../shared/urls.js";
 
 function mapPeerToChannelInfo(peer: Peer): ChannelInfo {
   const info: ChannelInfo = {
@@ -203,4 +205,153 @@ export async function fetchSimilarChannels(
 
   const res = await telegramClient.call({ _: "channels.getChannelRecommendations" });
   return parseRecommendationsResponse(res);
+}
+
+export type SearchChannelsMode = "name" | "posts" | "both";
+
+export interface SearchChannelsOptions {
+  query: string;
+  limit?: number;
+  mode?: SearchChannelsMode;
+}
+
+function mapPeerToChannelSearchResult(
+  peer: Peer,
+  source: ChannelSearchResult["source"],
+  matchedPost?: ChannelSearchResult["matchedPost"],
+): ChannelSearchResult | null {
+  if (peer.type !== "chat") {
+    return null;
+  }
+
+  const type = peer.chatType === "channel" ? "channel" : "group";
+  const username = getPeerUsername(peer);
+  const result: ChannelSearchResult = {
+    id: getPeerId(peer),
+    name: getPeerName(peer),
+    type,
+    source,
+  };
+
+  if (username) {
+    result.username = username;
+    result.url = `https://t.me/${username}`;
+  }
+
+  if (peer.membersCount != null) {
+    result.memberCount = peer.membersCount;
+  }
+
+  if (matchedPost) {
+    result.matchedPost = matchedPost;
+  }
+
+  return result;
+}
+
+function dedupeChannelSearchResults(
+  channels: ChannelSearchResult[],
+  limit: number,
+): ChannelSearchResult[] {
+  const seen = new Set<string>();
+  const result: ChannelSearchResult[] = [];
+
+  for (const channel of channels) {
+    const key = channel.username ?? channel.id;
+    if (seen.has(key)) {
+      continue;
+    }
+    seen.add(key);
+    result.push(channel);
+    if (result.length >= limit) {
+      break;
+    }
+  }
+
+  return result;
+}
+
+async function searchChannelsByName(
+  telegramClient: TelegramClient,
+  query: string,
+  limit: number,
+): Promise<ChannelSearchResult[]> {
+  try {
+    const res = await telegramClient.call({
+      _: "contacts.search",
+      q: query,
+      limit,
+    });
+
+    const chats = res.chats.map((chat) => new Chat(chat));
+    return chats
+      .map((chat) => mapPeerToChannelSearchResult(chat, "name"))
+      .filter((channel): channel is ChannelSearchResult => channel !== null);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (message.includes("QUERY_TOO_SHORT")) {
+      return [];
+    }
+    throw error;
+  }
+}
+
+async function searchChannelsByPosts(
+  telegramClient: TelegramClient,
+  query: string,
+  limit: number,
+): Promise<ChannelSearchResult[]> {
+  const messages = await telegramClient.searchGlobal({
+    query,
+    limit: Math.min(limit * 5, 100),
+    onlyChannels: true,
+  });
+
+  const channels: ChannelSearchResult[] = [];
+
+  for (const message of messages) {
+    if (message.isService || !message.text.trim()) {
+      continue;
+    }
+
+    const channel = mapPeerToChannelSearchResult(message.chat, "posts", {
+      date: message.date.toISOString(),
+      text: message.text,
+      url: buildTelegramPostUrl(
+        message.id,
+        getPeerId(message.chat),
+        getPeerUsername(message.chat),
+      ),
+    });
+
+    if (channel) {
+      channels.push(channel);
+    }
+  }
+
+  return channels;
+}
+
+export async function searchChannels(
+  telegramClient: TelegramClient,
+  options: SearchChannelsOptions,
+): Promise<ChannelSearchResult[]> {
+  const query = options.query.trim();
+  if (!query) {
+    throw new Error("Search query must not be empty");
+  }
+
+  const limit = Math.min(options.limit ?? 20, 50);
+  const mode = options.mode ?? "both";
+  const results: ChannelSearchResult[] = [];
+
+  if (mode === "name" || mode === "both") {
+    results.push(...(await searchChannelsByName(telegramClient, query, limit)));
+  }
+
+  if (mode === "posts" || mode === "both") {
+    results.push(...(await searchChannelsByPosts(telegramClient, query, limit)));
+  }
+
+  return dedupeChannelSearchResults(results, limit);
 }
