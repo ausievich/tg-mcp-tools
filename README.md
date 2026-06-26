@@ -4,11 +4,11 @@
 [![License: MIT](https://img.shields.io/npm/l/tg-mcp?style=flat-square)](https://github.com/ausievich/tg-mcp-tools/blob/main/LICENSE)
 [![Node.js](https://img.shields.io/node/v/tg-mcp?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
 
-A local MCP server for Cursor and Claude Desktop. It reads your Telegram subscriptions over MTProto (personal account, not a bot) and exposes channel posts to the agent for digests and natural-language questions like “what’s new in my Travel folder this week?”
+A local MCP server for Cursor, Claude, Codex, or other MCP clients. It reads your Telegram subscriptions over MTProto (personal account, not a bot) and exposes channel posts to the agent for digests and natural-language questions like “what’s new in my Travel folder this week?”
 
 ## Features
 
-- **20 MCP tools** across domains: `channels` (create/rename/join/leave/discover/search), `subscriptions` (list/archive/mute), `folders`, `messages`, `send`
+- **21 MCP tools** across domains: `channels` (create/rename/join/leave/discover/search), `subscriptions` (list/archive/mute), `folders`, `messages`, `send`
 - **Post links** — every message includes a `url` field (`https://t.me/...`)
 - **Archived channels** — included when listing subscriptions
 - **QR login** — scan from the terminal, no SMS or in-app codes
@@ -152,6 +152,7 @@ Run `npm run build` after code changes. `npm run inspect` builds and opens MCP I
 | `tg_edit_folder` | Update an existing folder: replace included chats or rename it |
 | `tg_get_dialogs` | List channels, groups, and chats; optional `folder` filter |
 | `tg_get_messages` | Posts from one channel; pagination (`beforeMessageId`), date filters (`sinceHours`, `minDate`) |
+| `tg_get_post_comments` | Comments on a channel post by t.me URL or `channelId` + `messageId`; pagination (`offsetId`, `offsetDate`) |
 | `tg_search_messages` | Full-text search in one chat across entire history |
 | `tg_search_in_folder` | Search by text across all channels/groups in a folder |
 | `tg_get_recent_from_channels` | Digest from multiple channels, sorted by date |
@@ -164,16 +165,12 @@ Example prompts:
 
 > What’s new in my **Travel** folder this week?
 
-> Search my **Health** folder for **Dentist**
-
-> What channels similar to my **Crypto** folder would Telegram recommend?
-
-> Find public channels about **NFT gifts** in Telegram search
+> Get all comments on https://t.me/channel/123 and summarize the discussion
 
 ## Security
 
 - **Do not commit `.env`** — it contains your Telegram session (full account access)
-- **Claude Desktop:** `claude_desktop_config.json` with `env` holds the same secrets — treat it like `.env`
+- **Claude Desktop / Codex:** config files with inline `env` hold the same secrets as `.env` — treat them like `.env`
 - Never share `TELEGRAM_SESSION` in logs, issues, or chats
 - Revoke API credentials or sessions at [my.telegram.org](https://my.telegram.org)
 - Log out locally: `npx tg-mcp-logout` (npm) or `npm run logout` (git clone)

@@ -1,8 +1,14 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { z } from "zod";
 import type { ToolContext } from "../../mcp/context.js";
 import { jsonResult } from "../../mcp/helpers.js";
-import { folderSchema } from "../../mcp/schemas.js";
+import {
+  createChannelInput,
+  getSimilarChannelsInput,
+  joinChannelInput,
+  leaveChannelInput,
+  searchChannelsInput,
+  setChannelTitleInput,
+} from "./schemas.js";
 import {
   createBroadcastChannel,
   fetchSimilarChannels,
@@ -17,14 +23,7 @@ export function registerChannelTools(server: McpServer, ctx: ToolContext): void 
     "tg_create_channel",
     {
       description: "Create a new Telegram broadcast channel owned by your account.",
-      inputSchema: {
-        title: z.string().min(1).max(255).describe("Channel title"),
-        description: z
-          .string()
-          .max(255)
-          .optional()
-          .describe("Channel description (about)"),
-      },
+      inputSchema: createChannelInput,
     },
     async ({ title, description }) => {
       const client = await ctx.getClient();
@@ -38,13 +37,7 @@ export function registerChannelTools(server: McpServer, ctx: ToolContext): void 
     {
       description:
         "Rename a Telegram channel or group. Requires admin rights with permission to change chat info.",
-      inputSchema: {
-        channelId: z
-          .string()
-          .min(1)
-          .describe("Numeric ID or @username of the channel or group"),
-        title: z.string().min(1).max(255).describe("New title"),
-      },
+      inputSchema: setChannelTitleInput,
     },
     async ({ channelId, title }) => {
       const client = await ctx.getClient();
@@ -58,12 +51,7 @@ export function registerChannelTools(server: McpServer, ctx: ToolContext): void 
     {
       description:
         "Subscribe to a public Telegram channel or group, or request to join via invite link. Accepts @username, numeric id, or t.me link.",
-      inputSchema: {
-        channelId: z
-          .string()
-          .min(1)
-          .describe("Channel @username, numeric id, or invite link (https://t.me/...)"),
-      },
+      inputSchema: joinChannelInput,
     },
     async ({ channelId }) => {
       const client = await ctx.getClient();
@@ -77,16 +65,7 @@ export function registerChannelTools(server: McpServer, ctx: ToolContext): void 
     {
       description:
         "Unsubscribe from a Telegram channel or leave a group. Accepts @username or numeric id. Channel owners cannot leave their own channel.",
-      inputSchema: {
-        channelId: z
-          .string()
-          .min(1)
-          .describe("Channel or group @username or numeric id"),
-        clearHistory: z
-          .boolean()
-          .optional()
-          .describe("Clear chat history after leaving (legacy group chats only)"),
-      },
+      inputSchema: leaveChannelInput,
     },
     async ({ channelId, clearHistory }) => {
       const client = await ctx.getClient();
@@ -100,18 +79,7 @@ export function registerChannelTools(server: McpServer, ctx: ToolContext): void 
     {
       description:
         "Get Telegram-recommended public channels similar to a channel, all channels in a folder, or your overall subscriptions. Only returns channels you are not subscribed to yet. Non-Premium accounts may receive a limited result set; check totalAvailable for the full count.",
-      inputSchema: {
-        channelId: z
-          .string()
-          .min(1)
-          .optional()
-          .describe("Numeric ID or @username of a channel to find similar channels for"),
-        folder: folderSchema
-          .optional()
-          .describe(
-            "Folder id or name — recommendations are collected from all channels in the folder and deduplicated",
-          ),
-      },
+      inputSchema: getSimilarChannelsInput,
     },
     async ({ channelId, folder }) => {
       const client = await ctx.getClient();
@@ -127,25 +95,7 @@ export function registerChannelTools(server: McpServer, ctx: ToolContext): void 
         "Search public Telegram channels and groups via Telegram's global search. " +
         "Uses name/username matching (contacts.search) and/or post content search across public channels (searchGlobal). " +
         "For topic discovery (e.g. NFT gifts), prefer mode 'both' or 'posts'. Name search needs at least 4 characters.",
-      inputSchema: {
-        query: z
-          .string()
-          .min(1)
-          .describe("Search query (e.g. NFT gifts, fragment, tonkeeper)"),
-        limit: z
-          .number()
-          .int()
-          .positive()
-          .max(50)
-          .optional()
-          .describe("Max channels to return (default 20, max 50)"),
-        mode: z
-          .enum(["name", "posts", "both"])
-          .optional()
-          .describe(
-            "name — match channel title/username; posts — channels with matching public posts; both — merge (default)",
-          ),
-      },
+      inputSchema: searchChannelsInput,
     },
     async ({ query, limit, mode }) => {
       const client = await ctx.getClient();

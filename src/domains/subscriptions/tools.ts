@@ -1,8 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { z } from "zod";
 import type { ToolContext } from "../../mcp/context.js";
 import { jsonResult } from "../../mcp/helpers.js";
-import { channelIdsSchema, folderSchema } from "../../mcp/schemas.js";
+import { channelIdsInput, getDialogsInput } from "./schemas.js";
 import {
   archiveChats,
   fetchDialogs,
@@ -17,18 +16,7 @@ export function registerSubscriptionTools(server: McpServer, ctx: ToolContext): 
     {
       description:
         "Returns dialogs (channels, groups, chats) the user is subscribed to. Optionally filter by Telegram folder.",
-      inputSchema: {
-        limit: z
-          .number()
-          .int()
-          .positive()
-          .max(500)
-          .optional()
-          .describe("Max dialogs to return (default 100, max 500)"),
-        folder: folderSchema
-          .optional()
-          .describe("Folder id or name. Omit for all chats."),
-      },
+      inputSchema: getDialogsInput,
     },
     async ({ limit, folder }) => {
       const client = await ctx.getClient();
@@ -41,9 +29,7 @@ export function registerSubscriptionTools(server: McpServer, ctx: ToolContext): 
     "tg_archive_chats",
     {
       description: "Move one or more chats/channels to Telegram Archive.",
-      inputSchema: {
-        channelIds: channelIdsSchema,
-      },
+      inputSchema: channelIdsInput,
     },
     async ({ channelIds }) => {
       const client = await ctx.getClient();
@@ -56,9 +42,7 @@ export function registerSubscriptionTools(server: McpServer, ctx: ToolContext): 
     "tg_unarchive_chats",
     {
       description: "Restore one or more chats/channels from Telegram Archive.",
-      inputSchema: {
-        channelIds: channelIdsSchema,
-      },
+      inputSchema: channelIdsInput,
     },
     async ({ channelIds }) => {
       const client = await ctx.getClient();
@@ -72,9 +56,7 @@ export function registerSubscriptionTools(server: McpServer, ctx: ToolContext): 
     {
       description:
         "Mute notifications for one or more chats/channels forever (same as Telegram's mute-until-2038).",
-      inputSchema: {
-        channelIds: channelIdsSchema,
-      },
+      inputSchema: channelIdsInput,
     },
     async ({ channelIds }) => {
       const client = await ctx.getClient();
@@ -87,9 +69,7 @@ export function registerSubscriptionTools(server: McpServer, ctx: ToolContext): 
     "tg_unmute_chats",
     {
       description: "Restore notifications for one or more muted chats/channels.",
-      inputSchema: {
-        channelIds: channelIdsSchema,
-      },
+      inputSchema: channelIdsInput,
     },
     async ({ channelIds }) => {
       const client = await ctx.getClient();

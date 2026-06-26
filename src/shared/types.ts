@@ -20,6 +20,23 @@ export interface MessageInfo {
   views?: number;
 }
 
+export interface PostCommentInfo {
+  id: number;
+  date: string;
+  text: string;
+  senderName?: string;
+}
+
+export interface PostCommentsResult {
+  post: MessageInfo;
+  discussionChatName: string;
+  discussionChatId: string;
+  totalCount: number;
+  comments: PostCommentInfo[];
+  nextOffsetId?: number;
+  nextOffsetDate?: number;
+}
+
 export type FolderType = "default" | "custom" | "chatlist";
 
 export interface FolderInfo {
