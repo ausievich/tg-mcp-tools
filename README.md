@@ -1,10 +1,10 @@
-# tg-mcp
+# Telegram MCP Tools
 
-[![npm version](https://img.shields.io/npm/v/tg-mcp?style=flat-square&color=cb3837&logo=npm&logoColor=white)](https://www.npmjs.com/package/tg-mcp)
-[![License: MIT](https://img.shields.io/npm/l/tg-mcp?style=flat-square)](https://github.com/ausievich/tg-mcp-tools/blob/main/LICENSE)
-[![Node.js](https://img.shields.io/node/v/tg-mcp?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[npm version](https://www.npmjs.com/package/tg-mcp)
+[License: MIT](https://github.com/ausievich/tg-mcp-tools/blob/main/LICENSE)
+[Node.js](https://nodejs.org/)
 
-A local MCP server for Cursor, Claude, Codex, or other MCP clients. It reads your Telegram subscriptions over MTProto (personal account, not a bot) and exposes channel posts to the agent for digests and natural-language questions like “what’s new in my Travel folder this week?”
+A local MCP server for Cursor, Claude, Codex, or any other client. It reads your Telegram subscriptions over MTProto (personal account, not a bot) and exposes channel posts to the agent for digests and natural-language questions like “what’s new in my Travel folder this week?”
 
 ## Features
 
@@ -137,35 +137,37 @@ Run `npm run build` after code changes. `npm run inspect` builds and opens MCP I
 
 ## MCP tools
 
-| Tool | Purpose |
-|------|---------|
-| `tg_create_channel` | Create a new broadcast channel (title and optional description) |
-| `tg_set_channel_title` | Rename a channel or group (requires admin rights) |
-| `tg_get_similar_channels` | Telegram-recommended similar public channels (by channel, folder, or all subscriptions) |
-| `tg_search_channels` | Global search for public channels/groups by name or post content |
-| `tg_join_channel` | Subscribe to a channel/group by @username, id, or invite link |
-| `tg_leave_channel` | Unsubscribe from a channel or leave a group |
-| `tg_mute_chats` | Mute notifications for chats/channels (forever by default) |
-| `tg_unmute_chats` | Restore notifications for muted chats/channels |
-| `tg_get_folders` | Telegram chat folders (tabs) with id and name |
-| `tg_create_folder` | Create a folder with channels and filter rules |
-| `tg_edit_folder` | Update an existing folder: replace included chats or rename it |
-| `tg_get_dialogs` | List channels, groups, and chats; optional `folder` filter |
-| `tg_get_messages` | Posts from one channel; pagination (`beforeMessageId`), date filters (`sinceHours`, `minDate`) |
-| `tg_get_post_comments` | Comments on a channel post by t.me URL or `channelId` + `messageId`; pagination (`offsetId`, `offsetDate`) |
-| `tg_search_messages` | Full-text search in one chat across entire history |
-| `tg_search_in_folder` | Search by text across all channels/groups in a folder |
-| `tg_get_recent_from_channels` | Digest from multiple channels, sorted by date |
-| `tg_get_recent_from_folder` | Digest from all channels/groups in a folder |
-| `tg_send_message` | Send formatted text to a user (@username), chat id, or `"me"` (Markdown/HTML) |
-| `tg_archive_chats` | Move chats/channels to Archive |
-| `tg_unarchive_chats` | Restore chats/channels from Archive |
+
+| Tool                          | Purpose                                                                                                    |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `tg_create_channel`           | Create a new broadcast channel (title and optional description)                                            |
+| `tg_set_channel_title`        | Rename a channel or group (requires admin rights)                                                          |
+| `tg_get_similar_channels`     | Telegram-recommended similar public channels (by channel, folder, or all subscriptions)                    |
+| `tg_search_channels`          | Global search for public channels/groups by name or post content                                           |
+| `tg_join_channel`             | Subscribe to a channel/group by @username, id, or invite link                                              |
+| `tg_leave_channel`            | Unsubscribe from a channel or leave a group                                                                |
+| `tg_mute_chats`               | Mute notifications for chats/channels (forever by default)                                                 |
+| `tg_unmute_chats`             | Restore notifications for muted chats/channels                                                             |
+| `tg_get_folders`              | Telegram chat folders (tabs) with id and name                                                              |
+| `tg_create_folder`            | Create a folder with channels and filter rules                                                             |
+| `tg_edit_folder`              | Update an existing folder: replace included chats or rename it                                             |
+| `tg_get_dialogs`              | List channels, groups, and chats; optional `folder` filter                                                 |
+| `tg_get_messages`             | Posts from one channel; pagination (`beforeMessageId`), date filters (`sinceHours`, `minDate`)             |
+| `tg_get_post_comments`        | Comments on a channel post by t.me URL or `channelId` + `messageId`; pagination (`offsetId`, `offsetDate`) |
+| `tg_search_messages`          | Full-text search in one chat across entire history                                                         |
+| `tg_search_in_folder`         | Search by text across all channels/groups in a folder                                                      |
+| `tg_get_recent_from_channels` | Digest from multiple channels, sorted by date                                                              |
+| `tg_get_recent_from_folder`   | Digest from all channels/groups in a folder                                                                |
+| `tg_send_message`             | Send formatted text to a user (@username), chat id, or `"me"` (Markdown/HTML)                              |
+| `tg_archive_chats`            | Move chats/channels to Archive                                                                             |
+| `tg_unarchive_chats`          | Restore chats/channels from Archive                                                                        |
+
 
 Example prompts:
 
 > What’s new in my **Travel** folder this week?
 
-> Get all comments on https://t.me/channel/123 and summarize the discussion
+> Get all comments on [https://t.me/channel/123](https://t.me/channel/123) and summarize the discussion
 
 ## Security
 
@@ -180,3 +182,4 @@ Example prompts:
 - [@mtcute/node](https://github.com/mtcute/mtcute) — MTProto client
 - [@modelcontextprotocol/sdk](https://github.com/modelcontextprotocol/typescript-sdk) — MCP
 - TypeScript (ESM), zod, dotenv
+
