@@ -1,8 +1,8 @@
 # Telegram MCP Tools
 
-[npm version](https://www.npmjs.com/package/tg-mcp)
-[License: MIT](https://github.com/ausievich/tg-mcp-tools/blob/main/LICENSE)
-[Node.js](https://nodejs.org/)
+[![npm version](https://img.shields.io/npm/v/tg-mcp?style=flat-square&color=cb3837&logo=npm&logoColor=white)](https://www.npmjs.com/package/tg-mcp)
+[![License: MIT](https://img.shields.io/npm/l/tg-mcp?style=flat-square)](https://github.com/ausievich/tg-mcp-tools/blob/main/LICENSE)
+[![Node.js](https://img.shields.io/node/v/tg-mcp?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
 
 A local MCP server for Cursor, Claude, Codex, or any other client. It reads your Telegram subscriptions over MTProto (personal account, not a bot) and exposes channel posts to the agent for digests and natural-language questions like “what’s new in my Travel folder this week?”
 
